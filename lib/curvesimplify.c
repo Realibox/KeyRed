@@ -149,9 +149,17 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
         }
 
         frameList.start = frameList.start->next;
+
+        if (frameList.end->next == NULL ) {
+            accord_error = evaluate_error(&curve[0], error);
+            if (accord_error) {
+                break;
+            }
+        }
+
         frameList.end = frameList.end->next;
 
-        if (frameList.end->next == NULL) {
+        if (frameList.end->next == NULL ) {
             accord_error = evaluate_error(&curve[0], error);
             if (accord_error) {
                 break;
