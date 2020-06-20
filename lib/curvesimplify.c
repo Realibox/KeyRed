@@ -120,14 +120,16 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
         curve[i].rightTangent = 0;
     }
 
-    curve[0].rightTangent = get_tangent(curve[0], curve[1]);
+    if(n > 1)
+        curve[0].rightTangent = get_tangent(curve[0], curve[1]);
     struct KeyFrameNode *firstNode = malloc(sizeof(struct KeyFrameNode));
     firstNode->key = &curve[0];
     firstNode->prev = NULL;
     firstNode->next = NULL;
     frameList.start = frameList.first = firstNode;
 
-    if (n == 1)
+    if (n <= 1)
+        frameList.end = firstNode;
         return frameList.first;
 
     curve[n - 1].leftTangent = get_tangent(curve[n - 2], curve[n - 1]);
