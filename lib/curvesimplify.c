@@ -129,8 +129,10 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
     frameList.start = frameList.first = firstNode;
 
     if (n <= 1)
+    {
         frameList.end = firstNode;
         return frameList.first;
+    }
 
     curve[n - 1].leftTangent = get_tangent(curve[n - 2], curve[n - 1]);
     struct KeyFrameNode *finalNode = malloc(sizeof(struct KeyFrameNode));
@@ -141,6 +143,10 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
 
     frameList.start->next = frameList.end;
     frameList.end->prev = frameList.start;
+
+    if(n <= 2){
+        return frameList.first;
+    }
 
     while (true) {
         bool accord_error = false;
@@ -153,8 +159,6 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
             }
         }
 
-        frameList.start = frameList.start->next;
-
         if (frameList.end->next == NULL) {
             accord_error = evaluate_error(&curve[0], error);
             if (accord_error) {
@@ -162,6 +166,7 @@ struct KeyFrameNode *simplify_curve(Point *points, int n, double error) {
             }
         }
 
+        frameList.start = frameList.start->next;
         frameList.end = frameList.end->next;
 
         if (frameList.end->next == NULL) {
